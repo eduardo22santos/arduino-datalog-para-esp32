@@ -1,0 +1,83 @@
+/**
+ * @file mqtt_.cpp
+ * @author Eduardo José dos Santos (eduardo22santos@hotmail.com)
+ * @brief Definições de funções que irão gerir a conexão do sistema embarcado com o broker mqtt.
+ * @version 2.0
+ * @date 2023-07-02
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+#include <mqtt_.h>
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+
+void enviarMqttThingspeak(float field1,float field2,float field3,float field4,float field5,
+                float field6, float field7,float field8,float lat,float longitude,float elevation,
+                const char * status,const char * topico)
+{
+    if (client.connected())
+    {    
+        String enviar = String("field1="+String(field1) +
+                        "&field2="+String(field2)+
+                        "&field3="+String(field3)+
+                        "&field4="+String(field4)+
+                        "&field5="+String(field5)+
+                        "&field6="+String(field6)+
+                        "&field7="+String(field7)+
+                        "&field8="+String(field8)+
+                        "&lat="+String(lat)+
+                        "&long="+String(longitude)+
+                        "&elevation="+String(elevation)+
+                        "&status="+status);
+        
+        client.publish(String("channels/"+ String(topico) +"/publish").c_str(), enviar.c_str());
+    }
+}
+
+void mqttInit(bool eduroamStatus, const char * eduroamLogin, const char * eduroamSenha,const char * wifiSsid,
+                const char * wifiSenha,const char * mqttHostname, int & mqttPort, const char * mqttName,
+                const char * mqttUser, const char * mqttSenha)
+{
+    client.setServer(mqttHostname,mqttPort);
+    client.setCallback(callback);
+    client.connect(mqttName,mqttUser,mqttSenha);
+}
+
+void loopMqtt(bool eduroamStatus, const char * eduroamLogin, const char * eduroamSenha,const char * wifiSsid,
+                const char * wifiSenha,const char * mqttHostname, int & mqttPort, const char * mqttName,
+                const char * mqttUser, const char * mqttSenha)
+{
+        if (!client.connected())
+        {
+            if (WiFi.isConnected())
+            {
+                ledcWrite(0, 255);
+                client.setServer(mqttHostname,mqttPort);
+                client.connect(mqttName,mqttUser, mqttSenha);
+            }else
+            {
+                updateWifi();
+            }
+        }else
+        {
+            client.loop();
+            for (size_t i = 0; i < 255; i++)
+            {
+                ledcWrite(0, i);
+                delay(2);
+            }
+            for (size_t i = 254; i > 0; i--)
+            {
+                ledcWrite(0, i);
+                delay(2);
+            }            
+        }
+}
+
+void callback(char* topic, byte* payload, unsigned int length)
+{
+
+}
+
