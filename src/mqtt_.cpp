@@ -32,7 +32,15 @@ void enviarMqttThingspeak(float field1,float field2,float field3,float field4,fl
                         "&elevation="+String(elevation)+
                         "&status="+status);
         
-        client.publish(String("channels/"+ String(topico) +"/publish").c_str(), enviar.c_str());
+        if(client.publish(String("channels/"+ String(topico) +"/publish").c_str(), enviar.c_str()))
+        {
+            Serial.println(enviar);
+            Serial.println("Enviado ao topico com sucesso!");
+        }else
+        {
+            Serial.println(enviar);
+            Serial.println("Falha ao enviar o dado!");
+        }
     }
 }
 
@@ -42,7 +50,13 @@ void mqttInit(bool eduroamStatus, const char * eduroamLogin, const char * eduroa
 {
     client.setServer(mqttHostname,mqttPort);
     client.setCallback(callback);
-    client.connect(mqttName,mqttUser,mqttSenha);
+    if(client.connect(mqttName,mqttUser,mqttSenha))
+    {
+        Serial.println("Conectado ao broker com sucesso!");
+    }else
+    {
+        Serial.println("Falha ao conectar com o broker!");
+    }
 }
 
 void loopMqtt(bool eduroamStatus, const char * eduroamLogin, const char * eduroamSenha,const char * wifiSsid,
@@ -53,7 +67,6 @@ void loopMqtt(bool eduroamStatus, const char * eduroamLogin, const char * eduroa
         {
             if (WiFi.isConnected())
             {
-                ledcWrite(0, 255);
                 client.setServer(mqttHostname,mqttPort);
                 client.connect(mqttName,mqttUser, mqttSenha);
             }else
@@ -62,17 +75,7 @@ void loopMqtt(bool eduroamStatus, const char * eduroamLogin, const char * eduroa
             }
         }else
         {
-            client.loop();
-            for (size_t i = 0; i < 255; i++)
-            {
-                ledcWrite(0, i);
-                delay(2);
-            }
-            for (size_t i = 254; i > 0; i--)
-            {
-                ledcWrite(0, i);
-                delay(2);
-            }            
+            client.loop();            
         }
 }
 

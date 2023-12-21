@@ -36,67 +36,49 @@ Dados sensor9(&s9);
 Dados sensor10(&s10);
 Dados sensor11(&s11);
 
-DHT_Unified sensores[] = {s0,s1,s2,s3,s4,
-                        s5,s6,s7,s8,s9,
-                        s10,s11};
+Dados sensores[] = {sensor0,sensor1,sensor2,sensor3,sensor4,
+                        sensor5,sensor6,sensor7,sensor8,sensor9,
+                        sensor10,sensor11};
 
 
 void realizarLeitura()
 {
-    bool erroDetectado = false;
 
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 12; i++)
     {
-        Serial.print("sensor: "); Serial.println(i);
         sensors_event_t event;
-        sensores[i].temperature().getEvent(&event);
+        Serial.print("\nsensor: ");Serial.println(i);
+        sensores[i].sensor->temperature().getEvent(&event);
         if (isnan(event.temperature)) {
             Serial.println(F("Error reading temperature!"));
-            erroDetectado = true;
         }
         else {
             Serial.print(F("Temperature: "));
             Serial.print(event.temperature);
             Serial.println(F("°C"));
-            //sensores[i].temperatura += event.temperature;
+            sensores[i].temperatura += event.temperature;
         }
         // Get humidity event and print its value.
-        sensores[i].humidity().getEvent(&event);
+        sensores[i].sensor->humidity().getEvent(&event);
         if (isnan(event.relative_humidity)) {
             Serial.println(F("Error reading humidity!"));
-            erroDetectado = true;
         }
         else {
             Serial.print(F("Humidity: "));
             Serial.print(event.relative_humidity);
             Serial.println(F("%"));
-            //sensores[i].umidadeRelativa += event.relative_humidity;
+            sensores[i].umidadeRelativa += event.relative_humidity;
         }
     }
 
-    if (!erroDetectado)
-    {
-        //led vermelho ligado no canal 2
-        for (size_t i = 254; i > 0; i--)
-        {
-            ledcWrite(2, i);
-            delay(2);
-        }
-    }else
-    {
-        ledcWrite(2, 254);
-    }
+    
 }
 
 void sensoresBegin()
 {
-    pinMode(LED_VERMELHO, OUTPUT);
-    ledcAttachPin(LED_VERMELHO, 2);
-    ledcSetup(2, 1000, 8);
-
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 12; i++)
     {
-        sensores[i].begin();
+        sensores[i].sensor->begin();
     }
 }
 
@@ -115,25 +97,25 @@ void Dados::zeraVariaveis()
 }
 void zeraVariaveis()
 {
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 12; i++)
     {
-        //sensores[i].zeraVariaveis();
+        sensores[i].zeraVariaveis();
     }
 }
 String getString()
 {
     String datalog;
-    for (size_t i = 0; i < 7; i++)
+    for (size_t i = 0; i < 12; i++)
     {
-        //datalog.operator+=(String(","+String(sensores[i].getUmidade())+","+String(sensores[i].getTemperatura())));
+        datalog.operator+=(String(","+String(sensores[i].getUmidade())+","+String(sensores[i].getTemperatura())));
     }
     return datalog;
 }
 float getUmidade(size_t i)
 {
-    //return sensores[i].getUmidade();
+    return sensores[i].getUmidade();
 }
 float getTemperatura(size_t i)
 {
-    //return sensores[i].getTemperatura();
+    return sensores[i].getTemperatura();
 }

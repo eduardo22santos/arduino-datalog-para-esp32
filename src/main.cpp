@@ -13,6 +13,9 @@
 #include <tarefas.h>
 #include <Wire.h>
 void setup() {
+    pinMode(LED_AZUL, OUTPUT);
+    ledcAttachPin(LED_AZUL, 1);
+    ledcSetup(1, 1000, 8);
 	Serial.begin(9600);
     Wire.begin(21,22);
     sensoresBegin();

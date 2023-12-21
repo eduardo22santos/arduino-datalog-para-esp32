@@ -102,10 +102,10 @@ Configuracao carregarConfiguracao()
 
         preferences.begin("my-app", false);
         preferences.clear();
-        preferences.putString(String(wifiSsid).c_str(),String("EDUROAM"));
-        preferences.putString(String(wifiSenha).c_str(),String("UFS_LAMOT"));
-        preferences.putString(String(eduroanLogin).c_str(),"loginEduroam");
-        preferences.putString(String(eduroanSenha).c_str(),"senhaEduroam");
+        preferences.putString(String(wifiSsid).c_str(),String("eduroam"));
+        preferences.putString(String(wifiSenha).c_str(),String("Edu.gtx66"));
+        preferences.putString(String(eduroanLogin).c_str(),"eduardo22santos@ufs.br");
+        preferences.putString(String(eduroanSenha).c_str(),"Edu.gtx66");
         preferences.putString(String(mqttHostname).c_str(),"hostMqtt");
         preferences.putString(String(mqttSenha).c_str(),"senhaMqtt");
         preferences.putString(String(mqttUser).c_str(),"usuarioMqtt");
@@ -118,7 +118,7 @@ Configuracao carregarConfiguracao()
         preferences.putInt(String(intervaloSalvar).c_str(),1);
         preferences.putBool(String(mqttStatus).c_str(),false);
         preferences.putBool(String(internetStatus).c_str(),true);
-        preferences.putBool(String(eduroamStatus).c_str(),false);
+        preferences.putBool(String(eduroamStatus).c_str(),true);
         preferences.end();
 
         return carregarConfiguracao();

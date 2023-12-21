@@ -29,7 +29,7 @@
  * @brief  Pino para o led que irá retornar o status de funcionamento do sistema.
  * 
  */
-#define LED_AZUL 32
+#define LED_AZUL 2
 
 /**
  * @brief Execulta uma tarefa que mantém a conexão com o servidor mqtt, e testa a conexão com a rede WiFi.

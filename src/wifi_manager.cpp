@@ -16,9 +16,6 @@ WifiManager conexao;
 
 void initWifi(Configuracao config)
 {
-    pinMode(internetPin, OUTPUT);//Definimos o pino 2 (LED) como saída.
-    ledcAttachPin(internetPin, 0);//Atribuimos o pino 2 ao canal 0.
-    ledcSetup(0, 1000, 8);
     //Atribuimos ao canal 0 a frequencia de 1000Hz com resolucao de 10bits.
     WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
     WiFi.mode(WIFI_STA); //init wifi mode
@@ -50,13 +47,13 @@ void updateWifi()
 {
     if (!WiFi.isConnected())
     {
-        ledcWrite(0, 0);
+        Serial.println("Tentando conectar ao wifi!");
         conexao.wifiStatus = false;
         reconnectWifi();
 
     }else
     {
-        ledcWrite(0, 255);
+        Serial.println("Conectado ao wifi!");
         conexao.wifiStatus = true;
     }
 }

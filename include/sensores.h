@@ -17,18 +17,18 @@
 #include <DHT_U.h>
 
 
-#define pin0 27
-#define pin1 26
-#define pin2 25
+#define pin0 14
+#define pin1 4
+#define pin2 32
 #define pin3 33
-#define pin4 17
-#define pin5 16
-#define pin6 15
-#define pin7 14
-#define pin8 14
-#define pin9 14
-#define pin10 14
-#define pin11 14
+#define pin4 25
+#define pin5 26
+#define pin6 27
+#define pin7 15
+#define pin8 13
+#define pin9 15
+#define pin10 15
+#define pin11 15
 
 
 
