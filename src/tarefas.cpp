@@ -243,9 +243,9 @@ void intervaloDeLeitura(void *pvParameters)
         if (config.mqttStatus)
         {
 
-            enviarMqttThingspeak(getTemperatura(0), getTemperatura(1), getTemperatura(2), getTemperatura(3),
+            enviarMqttThingspeak(getTemperatura(0), getUmidade(0), getTemperatura(2), getTemperatura(3),
                                  getTemperatura(4), getTemperatura(5), getTemperatura(6), getTemperatura(7),
-                                 getTemperatura(8), getTemperatura(9), getTemperatura(10), datalog.c_str(), config.mqttTopico);
+                                 getTemperatura(8), getTemperatura(9), getTemperatura(10), String(datalog).c_str(), config.mqttTopico);
         }
 
         zeraVariaveis(); // Reinicia o somatório dos dados coletados dos sensores.

@@ -21,15 +21,6 @@ void enviarMqttThingspeak(float field1,float field2,float field3,float field4,fl
     {    
         String enviar = String("field1="+String(field1) +
                         "&field2="+String(field2)+
-                        "&field3="+String(field3)+
-                        "&field4="+String(field4)+
-                        "&field5="+String(field5)+
-                        "&field6="+String(field6)+
-                        "&field7="+String(field7)+
-                        "&field8="+String(field8)+
-                        "&lat="+String(lat)+
-                        "&long="+String(longitude)+
-                        "&elevation="+String(elevation)+
                         "&status="+status);
         
         if(client.publish(String("channels/"+ String(topico) +"/publish").c_str(), enviar.c_str()))
