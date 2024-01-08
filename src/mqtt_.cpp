@@ -74,4 +74,8 @@ void callback(char* topic, byte* payload, unsigned int length)
 {
 
 }
+bool getMqttStatus()
+{
+    return client.connected();
+}
 

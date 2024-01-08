@@ -98,5 +98,11 @@ void loopMqtt(bool eduroamStatus, const char * eduroamLogin, const char * eduroa
                 const char * wifiSenha,const char * mqttHostname, int & mqttPort, const char * mqttName,
                 const char * mqttUser, const char * mqttSenha);
 
-
+/**
+ * @brief Retorna o status da conexão com o broker mqtt
+ * 
+ * @return true se conectado
+ * @return false se desconectado
+ */
+bool getMqttStatus();
 #endif // MQTT_H

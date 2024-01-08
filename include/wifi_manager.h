@@ -18,6 +18,8 @@
 #include <esp_wifi.h>
 #include <WiFiClientSecure.h>
 #include <esp_wpa2.h> //wpa2 library for connections to Enterprise networks
+#include <freertos/FreeRTOS.h>
+#include <freertos/timers.h>
 
 // Pino para o led de status da internet
 #define internetPin 15
@@ -63,5 +65,12 @@ void updateWifi();
  * @return false 
  */
 bool getWifiStatus();
+
+/**
+ * @brief Chama a função interna que reinicia o sistema.
+ * 
+ * @param time 
+ */
+void reiniciarPlacaPorWifiTimercallback(TimerHandle_t time);
 
 #endif // WIFI_MANAGER_H

@@ -91,6 +91,13 @@ void tarefasBegin()
                 appendFile(SD, "/datalog.csv",
                            "data,hora,s0u,s0t,s1u,s1t,s2u,s2t,s3u,s3t,s4u,s4t,s5u,s5t,s6u,s6t,ldr1,ldr2");
             }
+            if (!SD.exists("/offline.csv")) // verifica ou cria o arquivo datalog.txt
+            {
+                File file = SD.open("/offline.csv", FILE_WRITE);
+                file.close();
+                appendFile(SD, "/offline.csv",
+                           "data,hora,s0u,s0t,s1u,s1t,s2u,s2t,s3u,s3t,s4u,s4t,s5u,s5t,s6u,s6t,ldr1,ldr2");
+            }
             if (SD.exists("/config.json"))
             {
                 loadConfiguration("/config.json", config);
@@ -246,6 +253,18 @@ void intervaloDeLeitura(void *pvParameters)
             enviarMqttThingspeak(getTemperatura(0), getUmidade(0), getTemperatura(1), getUmidade(1),
                                  getTemperatura(2), getUmidade(2), getTemperatura(3), getUmidade(3),
                                  getTemperatura(4), getUmidade(4),  getTemperatura(5), String(datalog).c_str(), config.mqttTopico);
+
+            //Caso o wifi não esteja disponível, irá salvar esse dado também em um arquivo separado
+            // offline.csv
+            if (!getMqttStatus())
+            {
+                if (config.ssd && config.rtc)
+                {
+                    appendFile(SD, "/offline.csv", datalog.c_str());
+                    SD.end();
+                }
+            }
+            
         }
 
         zeraVariaveis(); // Reinicia o somatório dos dados coletados dos sensores.

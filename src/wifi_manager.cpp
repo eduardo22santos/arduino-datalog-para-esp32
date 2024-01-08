@@ -12,10 +12,23 @@
 
 unsigned long wifiTime = 0;
 
+/**
+ * @brief variável para criação do timer que irá reiniciar a placa.
+ * @attention Quando detectado falha na conexão com a internet, 
+ * será iniciado um timer, 5 minutos, onde ao fim da contagem 
+ * irá chamar a função a qual irá reiniciar a placa.
+ * @attention Caso a internet volte antes da contagem, o contador 
+ * deverá ser interrompido.
+ */
+TaskHandle_t resetBoardByWifi;
+
 WifiManager conexao;
 
 void initWifi(Configuracao config)
 {
+    Serial.println();
+    Serial.println("Iniciando wifi...");
+    Serial.println();
     //Atribuimos ao canal 0 a frequencia de 1000Hz com resolucao de 10bits.
     WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
     WiFi.mode(WIFI_STA); //init wifi mode
@@ -33,11 +46,15 @@ void initWifi(Configuracao config)
         delay(5000);
     }
     wifiTime = millis();
+    resetBoardByWifi = xTimerCreate("reiniciar a placa devido wifi",pdMS_TO_TICKS(300000),pdFALSE,0,reiniciarPlacaPorWifiTimercallback);
     updateWifi();
 }
 void reconnectWifi()
 {    
-    if ((millis() - wifiTime) >= 5000)
+    Serial.println();
+        Serial.println("tentando reconectar o wifi...");
+        Serial.println();
+    if ((millis() - wifiTime) >= 10000)
     {
         WiFi.reconnect();
         wifiTime = millis();
@@ -47,17 +64,30 @@ void updateWifi()
 {
     if (!WiFi.isConnected())
     {
-        Serial.println("Tentando conectar ao wifi!");
-        conexao.wifiStatus = false;
+        if (!xTimerIsTimerActive(resetBoardByWifi) == pdFALSE)
+        {
+            Serial.println();
+            Serial.println("Iniciando timer do wifi...");
+            Serial.println();
+            xTimerStart(resetBoardByWifi,0);
+        }
         reconnectWifi();
-
     }else
     {
-        Serial.println("Conectado ao wifi!");
-        conexao.wifiStatus = true;
+        if (xTimerIsTimerActive(resetBoardByWifi) != pdFALSE)
+        {
+            Serial.println();
+            Serial.println("Parando o timer do wifi...");
+            Serial.println();
+            xTimerStop(resetBoardByWifi, 0);
+        }
     }
+}
+void reiniciarPlacaPorWifiTimercallback(TimerHandle_t time)
+{
+    esp_restart();
 }
 bool getWifiStatus()
 {
-    return conexao.wifiStatus;
+    return WiFi.isConnected();
 }
