@@ -89,7 +89,7 @@ void tarefasBegin()
                 File file = SD.open("/datalog.csv", FILE_WRITE);
                 file.close();
                 appendFile(SD, "/datalog.csv",
-                           "data,hora,s0u,s0t,s1u,s1t,s2u,s2t,s3u,s3t,s4u,s4t,s5u,s5t,s6u,s6t,s7u,s7t,s8u,s8t,s9u,s9t,s10u,s10t,s11u,s11t");
+                           "data,hora,s0u,s0t,s1u,s1t,s2u,s2t,s3u,s3t,s4u,s4t,s5u,s5t,s6u,s6t,ldr1,ldr2");
             }
             if (SD.exists("/config.json"))
             {
@@ -243,9 +243,9 @@ void intervaloDeLeitura(void *pvParameters)
         if (config.mqttStatus)
         {
 
-            enviarMqttThingspeak(getTemperatura(0), getUmidade(0), getTemperatura(2), getTemperatura(3),
-                                 getTemperatura(4), getTemperatura(5), getTemperatura(6), getTemperatura(7),
-                                 getTemperatura(8), getTemperatura(9), getTemperatura(10), String(datalog).c_str(), config.mqttTopico);
+            enviarMqttThingspeak(getTemperatura(0), getUmidade(0), getTemperatura(1), getUmidade(1),
+                                 getTemperatura(2), getUmidade(2), getTemperatura(3), getUmidade(3),
+                                 getTemperatura(4), getUmidade(4),  getTemperatura(5), String(datalog).c_str(), config.mqttTopico);
         }
 
         zeraVariaveis(); // Reinicia o somatório dos dados coletados dos sensores.

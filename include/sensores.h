@@ -24,11 +24,9 @@
 #define pin4 25
 #define pin5 26
 #define pin6 27
-#define pin7 15
-#define pin8 13
-#define pin9 15
-#define pin10 15
-#define pin11 15
+
+#define ldr1 36
+#define ldr2 39
 
 
 
@@ -122,4 +120,6 @@ float getTemperatura(size_t i);
  * @return String 
  */
 String getString();
+float getLdr1();
+float getLdr2();
 #endif // SENSORES_H

@@ -17,11 +17,7 @@ DHT_Unified s3(pin3,DHT22);
 DHT_Unified s4(pin4,DHT22);
 DHT_Unified s5(pin5,DHT22);
 DHT_Unified s6(pin6,DHT22);
-DHT_Unified s7(pin7,DHT22);
-DHT_Unified s8(pin8,DHT22);
-DHT_Unified s9(pin9,DHT22);
-DHT_Unified s10(pin10,DHT22);
-DHT_Unified s11(pin11,DHT22);
+
 
 Dados sensor0(&s0);
 Dados sensor1(&s1);
@@ -30,21 +26,18 @@ Dados sensor3(&s3);
 Dados sensor4(&s4);
 Dados sensor5(&s5);
 Dados sensor6(&s6);
-Dados sensor7(&s7);
-Dados sensor8(&s8);
-Dados sensor9(&s9);
-Dados sensor10(&s10);
-Dados sensor11(&s11);
 
 Dados sensores[] = {sensor0,sensor1,sensor2,sensor3,sensor4,
-                        sensor5,sensor6,sensor7,sensor8,sensor9,
-                        sensor10,sensor11};
+                        sensor5,sensor6};
+
+float ldr_1 = 0;
+float ldr_2 = 0;
 
 
 void realizarLeitura()
 {
 
-    for (size_t i = 0; i < 12; i++)
+    for (size_t i = 0; i < 7; i++)
     {
         sensors_event_t event;
         Serial.print("\nsensor: ");Serial.println(i);
@@ -70,13 +63,19 @@ void realizarLeitura()
             sensores[i].umidadeRelativa += event.relative_humidity;
         }
     }
-
-    
+    float ld1 = analogRead(ldr1);
+    float ld2 = analogRead(ldr2);
+    ldr_1 += ld1;
+    ldr_2 += ld2;
+    Serial.println();
+    Serial.print("Ldr1: ");Serial.println(ld1);
+    Serial.print("Ldr2: ");Serial.println(ld2);
+    Serial.println();
 }
 
 void sensoresBegin()
 {
-    for (size_t i = 0; i < 12; i++)
+    for (size_t i = 0; i < 7; i++)
     {
         sensores[i].sensor->begin();
     }
@@ -97,7 +96,7 @@ void Dados::zeraVariaveis()
 }
 void zeraVariaveis()
 {
-    for (size_t i = 0; i < 12; i++)
+    for (size_t i = 0; i < 7; i++)
     {
         sensores[i].zeraVariaveis();
     }
@@ -105,10 +104,11 @@ void zeraVariaveis()
 String getString()
 {
     String datalog;
-    for (size_t i = 0; i < 12; i++)
+    for (size_t i = 0; i < 7; i++)
     {
         datalog.operator+=(String(","+String(sensores[i].getUmidade())+","+String(sensores[i].getTemperatura())));
     }
+    datalog.operator+=(String(","+String(getLdr1())+","+String(getLdr2())));
     return datalog;
 }
 float getUmidade(size_t i)
@@ -118,4 +118,12 @@ float getUmidade(size_t i)
 float getTemperatura(size_t i)
 {
     return sensores[i].getTemperatura();
+}
+float getLdr1()
+{
+    return ldr_1/10;
+}
+float getLdr2()
+{
+    return ldr_2/10;
 }
