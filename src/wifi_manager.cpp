@@ -51,11 +51,12 @@ void initWifi(Configuracao config)
 }
 void reconnectWifi()
 {    
-    Serial.println();
-        Serial.println("tentando reconectar o wifi...");
-        Serial.println();
+    
     if ((millis() - wifiTime) >= 10000)
     {
+        Serial.println();
+        Serial.println("tentando reconectar o wifi...");
+        Serial.println();
         WiFi.reconnect();
         wifiTime = millis();
     }
@@ -64,7 +65,7 @@ void updateWifi()
 {
     if (!WiFi.isConnected())
     {
-        if (!xTimerIsTimerActive(resetBoardByWifi) == pdFALSE)
+        if (xTimerIsTimerActive(resetBoardByWifi) == pdFALSE)
         {
             Serial.println();
             Serial.println("Iniciando timer do wifi...");

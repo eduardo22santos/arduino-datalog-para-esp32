@@ -59,7 +59,14 @@ void loopMqtt(bool eduroamStatus, const char * eduroamLogin, const char * eduroa
             if (WiFi.isConnected())
             {
                 client.setServer(mqttHostname,mqttPort);
-                client.connect(mqttName,mqttUser, mqttSenha);
+                if(client.connect(mqttName,mqttUser,mqttSenha))
+                {
+                    Serial.println("Conectado ao broker com sucesso!");
+                }else
+                {
+                    Serial.println("Falha ao conectar com o broker!");
+                }
+                updateWifi();
             }else
             {
                 updateWifi();

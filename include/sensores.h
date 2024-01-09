@@ -19,14 +19,14 @@
 
 #define pin0 14
 #define pin1 4
-#define pin2 32
+#define pin2 25
 #define pin3 33
-#define pin4 25
-#define pin5 26
-#define pin6 27
+#define pin4 26
+#define pin5 27
+#define pin6 13
 
-#define ldr1 36
-#define ldr2 39
+#define ldr1 35
+#define ldr2 32
 
 
 
