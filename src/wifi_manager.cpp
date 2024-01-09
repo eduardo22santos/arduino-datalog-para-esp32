@@ -70,7 +70,7 @@ void updateWifi()
             Serial.println();
             Serial.println("Iniciando timer do wifi...");
             Serial.println();
-            xTimerStart(resetBoardByWifi,0);
+            xTimerStart(resetBoardByWifi,pdMS_TO_TICKS(300000));
         }
         reconnectWifi();
     }else
