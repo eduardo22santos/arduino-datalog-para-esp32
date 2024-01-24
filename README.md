@@ -1,4 +1,4 @@
-# ESTRUTURAÇÃO DO PROJETO
+# ESTRUTURA DO PROJETO
 > ### **projeto_bee**
 >> #### **include**
 >> > ##### configuracao.h
