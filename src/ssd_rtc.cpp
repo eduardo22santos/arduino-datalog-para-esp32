@@ -12,17 +12,17 @@
 #include <ssd_rtc.h>
 
 Preferences preferences;
-RTC_DS3231 rtc;
+RTC_DS1307 rtc;
 
 bool rtcBegin()
 {
     if (rtc.begin())
     {
-        rtc.disable32K();
-        rtc.clearAlarm(1);
-        rtc.clearAlarm(2);
-        rtc.writeSqwPinMode(DS3231_OFF);
-        rtc.disableAlarm(2);
+        //rtc.disable32K();
+        //rtc.clearAlarm(1);
+        //rtc.clearAlarm(2);
+        //rtc.writeSqwPinMode(DS3231_OFF);
+        //rtc.disableAlarm(2);
         return true;
     }else
     {
@@ -32,10 +32,11 @@ bool rtcBegin()
 
 bool verificarRtc()
 {
-    if (rtc.lostPower())
-    {
-        return false;
-    }else if (!rtc.now().isValid())
+    //if (rtc.lostPower())
+    //{
+    //    return false;
+    //}else if (!rtc.now().isValid())
+    if (!rtc.now().isValid())
     {
         return false;
     }else if (rtc.now().year() == 2000)
