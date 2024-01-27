@@ -24,6 +24,12 @@ O sistema é caracterizado como um sistema de tempo real não crítico o qual ut
 
 Note no arquivo main.cpp que toda configuração do sistema está descrita nas funções **sensoresBegin()** e **tarefasBegin**, as quais são chamadas na função **setup()** do ARDUINO CORE. A função loop() não foi utilizada e é encerrada assim que chamada.
 
+## MÓDULOS PADRÃO PARA O FUNCIONAMENTO DO DATA LOGGER
+1. Módulo sd card;
+2. Módulo RTC DS1307;
+3. Os sensores são personalizáveis. Essa versão implementa vários sensores dht22 mais dois LDR.
+*** No branch 1.0, é implementado o RTC DS3231.
+
 ## DESCRIÇÃO RESUMIDA DA LIB TAREFAS
 A biblioteca tarefas reune os métodos de responsáveis por gerenciar a lógica de funcionamento do sistema.
 Os métodos principais são:
