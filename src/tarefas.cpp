@@ -243,6 +243,12 @@ void intervaloDeLeitura(void *pvParameters)
 
         if (config.ssd && config.rtc)
         {
+            //Caso o wifi não esteja disponível, irá salvar esse dado também em um arquivo separado
+            // offline.csv
+            if (!getMqttStatus())
+            {
+                appendFile(SD, "/offline.csv", datalog.c_str());
+            }
             appendFile(SD, "/datalog.csv", datalog.c_str());
             SD.end();
         }
@@ -254,16 +260,7 @@ void intervaloDeLeitura(void *pvParameters)
                                  getTemperatura(2), getUmidade(2), getTemperatura(3), getUmidade(3),
                                  getTemperatura(4), getUmidade(4),  getTemperatura(5), String(datalog).c_str(), config.mqttTopico);
 
-            //Caso o wifi não esteja disponível, irá salvar esse dado também em um arquivo separado
-            // offline.csv
-            if (!getMqttStatus())
-            {
-                if (config.ssd && config.rtc)
-                {
-                    appendFile(SD, "/offline.csv", datalog.c_str());
-                    SD.end();
-                }
-            }
+            
             
         }
 
