@@ -207,8 +207,7 @@ void leituraDeSensores(void *pvParameters)
     {
         realizarLeitura();
 
-        while (xSemaphoreGive(semaforoDosIndices) != pdTRUE)
-            ;
+        while (xSemaphoreGive(semaforoDosIndices) != pdTRUE);
     }
 
     vTaskDelete(NULL);
@@ -220,18 +219,18 @@ void intervaloDeLeitura(void *pvParameters)
     {
         // Salvando os dados no cartão SD
         Configuracao config = *(Configuracao *)pvParameters;
-        if (config.ssd && config.rtc)
+        uint8_t testesSd = 0;
+        do
         {
-            if (!SD.begin())
-            {
-                ESP.restart();
-            }
-            tempoAtual = returnHorario();
-            if (!tempoAtual.isValid())
-            {
-                esp_restart();
-            }
+            if(SD.begin()) break;
+        } while (testesSd <= 3);
+        
+        tempoAtual = returnHorario();
+        if (!tempoAtual.isValid())
+        {
+            esp_restart();
         }
+        
 
         char horarioArquivo[9] = "hh:mm:ss";
         char dataArquivo[11] = "DD/MM/YYYY";
@@ -241,17 +240,17 @@ void intervaloDeLeitura(void *pvParameters)
         // Salva no arquivo datalog
         Serial.println(datalog);
 
-        if (config.ssd && config.rtc)
+        //Salvando no Cartão SD, arquivo datalog
+        appendFile(SD, "/datalog.csv", datalog.c_str());
+
+        //Caso o wifi não esteja disponível, irá salvar esse dado também em um arquivo separado
+        // offline.csv
+        if (!getMqttStatus())
         {
-            //Caso o wifi não esteja disponível, irá salvar esse dado também em um arquivo separado
-            // offline.csv
-            if (!getMqttStatus())
-            {
-                appendFile(SD, "/offline.csv", datalog.c_str());
-            }
-            appendFile(SD, "/datalog.csv", datalog.c_str());
-            SD.end();
+            appendFile(SD, "/offline.csv", datalog.c_str());
         }
+           
+        SD.end();
 
         if (config.mqttStatus)
         {
@@ -304,7 +303,7 @@ void mqtt_loop(void *pvParameters)
 
 void sensoresTimercallback(TimerHandle_t time)
 {
-    xTaskCreatePinnedToCore(leituraDeSensores, "leituraDeSensores", 10000, &config, 1, &leituraDeSensores_, 1);
+    xTaskCreatePinnedToCore(leituraDeSensores, "leituraDeSensores", 10000, &config, configMAX_PRIORITIES, &leituraDeSensores_, 1);
 }
 void reiniciarPlacaTimercallback(TimerHandle_t time)
 {
@@ -312,7 +311,7 @@ void reiniciarPlacaTimercallback(TimerHandle_t time)
 }
 void intervaloDeLeituraTimerCallback(TimerHandle_t time)
 {
-    xTaskCreatePinnedToCore(intervaloDeLeitura, "intervaloDeleitura", 10000, &config, 1, &intervaloDeLeitura_, 1);
+    xTaskCreatePinnedToCore(intervaloDeLeitura, "intervaloDeleitura", 10000, &config, configMAX_PRIORITIES, &intervaloDeLeitura_, 1);
 }
 void atualizarHorarioManualmente()
 {

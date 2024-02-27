@@ -10,7 +10,6 @@
  */
 #include <wifi_manager.h>
 
-unsigned long wifiTime = 0;
 
 /**
  * @brief variável para criação do timer que irá reiniciar a placa.
@@ -22,7 +21,6 @@ unsigned long wifiTime = 0;
  */
 TaskHandle_t resetBoardByWifi;
 
-WifiManager conexao;
 
 void initWifi(Configuracao config)
 {
@@ -45,21 +43,16 @@ void initWifi(Configuracao config)
         WiFi.begin(config.wifiSsid, config.wifiSenha);
         delay(5000);
     }
-    wifiTime = millis();
     resetBoardByWifi = xTimerCreate("reiniciar a placa devido wifi",pdMS_TO_TICKS(300000),pdFALSE,0,reiniciarPlacaPorWifiTimercallback);
     updateWifi();
 }
 void reconnectWifi()
 {    
-    
-    if ((millis() - wifiTime) >= 10000)
-    {
         Serial.println();
         Serial.println("tentando reconectar o wifi...");
         Serial.println();
         WiFi.reconnect();
-        wifiTime = millis();
-    }
+        delay(10000);
 }
 void updateWifi()
 {
