@@ -13,12 +13,11 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-void enviarMqttThingspeak(float field1,float field2,float field3,float field4,float field5,
+bool enviarMqttThingspeak(float field1,float field2,float field3,float field4,float field5,
                 float field6, float field7,float field8,float lat,float longitude,float elevation,
                 const char * status,const char * topico)
 {
-    if (client.connected())
-    {    
+        
         String enviar = String("field1="+String(field1) +
                         "&field2="+String(field2)+
                         "&status="+status);
@@ -27,12 +26,14 @@ void enviarMqttThingspeak(float field1,float field2,float field3,float field4,fl
         {
             Serial.println(enviar);
             Serial.println("Enviado ao topico com sucesso!");
+            return true;
         }else
         {
             Serial.println(enviar);
             Serial.println("Falha ao enviar o dado!");
+            return false;
         }
-    }
+    
 }
 
 void mqttInit(bool eduroamStatus, const char * eduroamLogin, const char * eduroamSenha,const char * wifiSsid,

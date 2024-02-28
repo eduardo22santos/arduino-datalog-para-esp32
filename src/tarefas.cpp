@@ -242,27 +242,24 @@ void intervaloDeLeitura(void *pvParameters)
 
         //Salvando no Cartão SD, arquivo datalog
         appendFile(SD, "/datalog.csv", datalog.c_str());
-
-        //Caso o wifi não esteja disponível, irá salvar esse dado também em um arquivo separado
-        // offline.csv
-        if (!getMqttStatus())
-        {
-            appendFile(SD, "/offline.csv", datalog.c_str());
-        }
-           
-        SD.end();
+        
 
         if (config.mqttStatus)
         {
 
-            enviarMqttThingspeak(getTemperatura(0), getUmidade(0), getTemperatura(1), getUmidade(1),
+            if(!enviarMqttThingspeak(getTemperatura(0), getUmidade(0), getTemperatura(1), getUmidade(1),
                                  getTemperatura(2), getUmidade(2), getTemperatura(3), getUmidade(3),
-                                 getTemperatura(4), getUmidade(4),  getTemperatura(5), String(datalog).c_str(), config.mqttTopico);
-
-            
+                                 getTemperatura(4), getUmidade(4),  getTemperatura(5), String(datalog).c_str(), config.mqttTopico))
+            {
+                //Caso a internet não esteja disponível, irá salvar esse dado também em um arquivo separado
+                // offline.csv
+                appendFile(SD, "/offline.csv", datalog.c_str());
+            }
             
         }
 
+        SD.end();
+        
         zeraVariaveis(); // Reinicia o somatório dos dados coletados dos sensores.
 
         while (xSemaphoreGive(semaforoDosIndices) != pdTRUE)

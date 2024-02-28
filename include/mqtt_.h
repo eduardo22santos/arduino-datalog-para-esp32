@@ -51,8 +51,11 @@ void callback(char* topic, byte* payload, unsigned int length);
  * @param elevation field elevation da api do serviço thingspeak.
  * @param status Campo de status da api do serviço thingspeak.
  * @param topico 
+ * 
+ * @return true se conseguir enviar a mensagem ao broker mqtt
+ * @return false se falhar ao enviar a mensagem
  */
-void enviarMqttThingspeak(float field1,float field2,float field3,float field4,float field5,
+bool enviarMqttThingspeak(float field1,float field2,float field3,float field4,float field5,
                 float field6, float field7,float field8,float lat,float longitude,float elevation,
                 const char * status,const char * topico);
 
