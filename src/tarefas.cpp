@@ -222,7 +222,13 @@ void intervaloDeLeitura(void *pvParameters)
         uint8_t testesSd = 0;
         do
         {
-            if(SD.begin()) break;
+            if(SD.begin())
+            {
+                break;
+            }else
+            {
+                testesSd++;
+            }
         } while (testesSd <= 3);
         
         tempoAtual = returnHorario();
